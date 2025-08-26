@@ -1,0 +1,14 @@
+#include "../s21_matrix.h"
+
+#test test_for_remove
+s21_remove_matrix(NULL);
+
+#test test1
+matrix_t A;
+int res = s21_create_matrix(0, 0, &A);
+ck_assert_int_eq(1, res);
+
+#test test2
+matrix_t A;
+int res = s21_create_matrix(1, 0, &A);
+ck_assert_int_eq(1, res);

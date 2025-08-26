@@ -1,0 +1,141 @@
+#include "../s21_matrix.h"
+
+#test test1
+matrix_t C;
+int res = s21_inverse_matrix(NULL, &C);
+ck_assert_int_eq(res, 1);
+
+#test test2
+matrix_t A, C;
+A.rows = 0, A.columns = 2;
+int res = s21_inverse_matrix(&A, &C);
+ck_assert_int_eq(res, 1);
+
+#test test3
+matrix_t A, C;
+A.rows = 2, A.columns = 0;
+int res = s21_inverse_matrix(&A, &C);
+ck_assert_int_eq(res, 1);
+
+#test test4
+matrix_t A, C;
+s21_create_matrix(2, 3, &A);
+int res = s21_inverse_matrix(&A, &C);
+s21_remove_matrix(&A);
+ck_assert_int_eq(res, 2);
+
+#test test5
+matrix_t A, C;
+s21_create_matrix(3, 3, &A);
+double buf[9] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+int counter = 0;
+for(int i = 0; i < 3; ++i)
+	for(int j = 0; j < 3; ++j)
+		A.matrix[i][j] = buf[counter++];
+int res = s21_inverse_matrix(&A, &C);
+s21_remove_matrix(&A);
+ck_assert_int_eq(res, 2);
+
+#test test6
+matrix_t A, C;
+s21_create_matrix(3, 3, &A);
+double buf[9] = {2, 5, 7, 6, 3, 4, 5, -2, -3}, result[9] = {1, -1, 1, -38, 41, -34, 27, -29, 24};
+int counter = 0;
+for(int i = 0; i < 3; ++i)
+	for(int j = 0; j < 3; ++j)
+		A.matrix[i][j] = buf[counter++];
+int res = s21_inverse_matrix(&A, &C);
+s21_remove_matrix(&A);
+counter = 0;
+for(int i = 0; i < 3; ++i)
+	for(int j = 0; j < 3; ++j)
+		ck_assert_double_eq(C.matrix[i][j], result[counter++]);
+s21_remove_matrix(&C);
+ck_assert_int_eq(res, 0);
+
+#test test7
+matrix_t A, C;
+s21_create_matrix(2, 2, &A);
+double m1[4] = {1, 2, 3, 4}, result[4] = {-2, 1, 1.5, -0.5};
+int counter = 0;
+for(int i = 0; i < 2; ++i)
+	for(int j = 0; j < 2; ++j)
+		A.matrix[i][j] = m1[counter++];
+int res = s21_inverse_matrix(&A, &C);
+ck_assert_int_eq(0, res);
+counter = 0;
+for(int i = 0; i < 2; ++i)
+	for(int j = 0; j < 2; ++j)
+		ck_assert_double_eq(C.matrix[i][j], result[counter++]);
+s21_remove_matrix(&C);
+s21_remove_matrix(&A);
+
+#test test8
+matrix_t A, C;
+s21_create_matrix(1, 1, &A);
+A.matrix[0][0] = 0.001;
+int res = s21_inverse_matrix(&A, &C);
+ck_assert_int_eq(0, res);
+ck_assert_double_eq(C.matrix[0][0], 1000);
+s21_remove_matrix(&C);
+s21_remove_matrix(&A);
+
+#test test9
+matrix_t A, C;
+s21_create_matrix(3, 3, &A);
+int counter = 0;
+double m1[9] = {2, 0, 1, 0, -3, -1, -2, 4, 0}, result[9] = {2, 2, 1.5, 1, 1, 1, -3, -4, -3};
+for(int i = 0; i < 3; ++i)
+	for(int j = 0; j < 3; j++)
+		A.matrix[i][j] = m1[counter++];
+counter = 0;
+int res = s21_inverse_matrix(&A, &C);
+ck_assert_int_eq(0, res);
+for(int i = 0; i < 3; ++i)
+	for(int j = 0; j < 3; ++j)
+		ck_assert_double_eq(result[counter++], C.matrix[i][j]);
+s21_remove_matrix(&C);
+s21_remove_matrix(&A);
+
+#test test10
+matrix_t A, C;
+s21_create_matrix(2, 2, &A);
+int counter = 0;
+double m1[4] = {2, 0, 0, -2}, result[4] = {0.5, 0, 0, -0.5};
+for(int i = 0; i < 2; ++i)
+	for(int j = 0; j < 2; ++j)
+		A.matrix[i][j] = m1[counter++];
+int res = s21_inverse_matrix(&A, &C);
+counter = 0;
+ck_assert_int_eq(res, 0);
+for(int i = 0; i < 2; ++i)
+	for(int j = 0; j < 2; ++j)
+		ck_assert_double_eq(result[counter++], C.matrix[i][j]);
+s21_remove_matrix(&C);
+s21_remove_matrix(&A);
+
+#test test11
+matrix_t A, C;
+s21_create_matrix(7, 7, &A);
+int counter = 0;
+double m1[49] = {1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 1, 0, 0, 0, 2, 0, 0, 0, 1, 0, 2, 0, 0, 0, 0, 0, 1},
+result[49] = {-1, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 2, 0, -1, 0, 0, 0, 2, 0, 0, 0, -1, 0, 2, 0, 0, 0, 0, 0, -1};
+for(int i = 0; i < 7; ++i)
+	for(int j = 0; j < 7; ++j)
+		A.matrix[i][j] = m1[counter++];
+counter = 0;
+int res = s21_inverse_matrix(&A, &C);
+ck_assert_int_eq(0, res);
+for(int i = 0; i < 7; ++i)
+	for(int j = 0; j < 7; ++j)
+		ck_assert_double_eq(result[counter++], C.matrix[i][j]);
+s21_remove_matrix(&C);
+s21_remove_matrix(&A);
+
+#test test12
+matrix_t A, C;
+s21_create_matrix(1, 1, &A);
+A.matrix[0][0] = 0;
+int res = s21_inverse_matrix(&A, &C);
+ck_assert_int_eq(2, res);
+s21_remove_matrix(&A);

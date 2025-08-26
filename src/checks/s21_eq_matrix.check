@@ -1,0 +1,282 @@
+#include "../s21_matrix.h"
+
+#test test1
+matrix_t A;
+s21_create_matrix(2, 3, &A);
+int res = s21_eq_matrix(&A, NULL);
+s21_remove_matrix(&A);
+ck_assert_int_eq(res, 0);
+
+#test test2
+matrix_t A;
+s21_create_matrix(2, 3, &A);
+int res = s21_eq_matrix(NULL, &A);
+s21_remove_matrix(&A);
+ck_assert_int_eq(res, 0);
+
+#test test3
+int res = s21_eq_matrix(NULL, NULL);
+ck_assert_int_eq(res, 0);
+
+#test test4
+matrix_t A, B;
+s21_create_matrix(2, 3, &A);
+s21_create_matrix(3, 3, &B);
+double buff[9] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+int counter = 0;
+for(int i = 0; i < 2; ++i)
+	for(int j = 0; j < 3; ++j)
+		A.matrix[i][j] = buff[counter++];
+counter = 0;
+for(int i = 0; i < 3; ++i)
+	for(int j = 0; j < 3; ++j)
+		B.matrix[i][j] = buff[counter++];
+int res = s21_eq_matrix(&A, &B);
+s21_remove_matrix(&A);
+s21_remove_matrix(&B);
+ck_assert_int_eq(res, 0);
+
+#test test5
+matrix_t A, B;
+s21_create_matrix(2, 3, &A);
+s21_create_matrix(3, 3, &B);
+double buff[9] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+int counter = 0;
+for(int i = 0; i < 2; ++i)
+	for(int j = 0; j < 3; ++j)
+		A.matrix[i][j] = buff[counter++];
+counter = 0;
+for(int i = 0; i < 3; ++i)
+	for(int j = 0; j < 3; ++j)
+		B.matrix[i][j] = buff[counter++];
+int res = s21_eq_matrix(&B, &A);
+s21_remove_matrix(&A);
+s21_remove_matrix(&B);
+ck_assert_int_eq(res, 0);
+
+#test test6
+matrix_t A, B;
+s21_create_matrix(2, 3, &A);
+s21_create_matrix(2, 3, &B);
+for(int i = 0; i < 2; i++)
+	for(int j = 0; j < 3; ++j){
+		A.matrix[i][j] = (double)rand() / (double)rand() + 0.3;
+		B.matrix[i][j] = A.matrix[i][j];
+	}
+A.matrix[0][2] += 0.00000001;
+A.matrix[0][2] += -1;
+int res = s21_eq_matrix(&A, &B);
+s21_remove_matrix(&A);
+s21_remove_matrix(&B);
+ck_assert_int_eq(res, 0);
+
+#test test7
+matrix_t A, B;
+s21_create_matrix(2, 3, &A);
+s21_create_matrix(2, 3, &B);
+for(int i = 0; i < 2; i++)
+	for(int j = 0; j < 3; ++j){
+		A.matrix[i][j] = (double)rand() / (double)rand() + 0.3;
+		B.matrix[i][j] = A.matrix[i][j];
+	}
+A.matrix[0][2] += 0.0000001;
+int res = s21_eq_matrix(&A, &B);
+s21_remove_matrix(&A);
+s21_remove_matrix(&B);
+ck_assert_int_eq(res, 0);
+
+#test test8
+matrix_t A, B;
+s21_create_matrix(2, 3, &A);
+s21_create_matrix(2, 3, &B);
+for(int i = 0; i < 2; i++)
+	for(int j = 0; j < 3; ++j){
+		A.matrix[i][j] = (double)rand() / (double)rand() + 0.3;
+		B.matrix[i][j] = A.matrix[i][j];
+	}
+int res = s21_eq_matrix(&A, &B);
+s21_remove_matrix(&A);
+s21_remove_matrix(&B);
+ck_assert_int_eq(res, 1);
+
+#test test9
+matrix_t A, B;
+s21_create_matrix(2, 3, &A);
+s21_create_matrix(2, 3, &B);
+for(int i = 0; i < 2; i++)
+	for(int j = 0; j < 3; ++j){
+		A.matrix[i][j] = (double)rand() / (double)rand() + 0.3;
+		B.matrix[i][j] = A.matrix[i][j];
+	}
+A.matrix[0][2] += 0.00000001;
+int res = s21_eq_matrix(&A, &B);
+s21_remove_matrix(&A);
+s21_remove_matrix(&B);
+ck_assert_int_eq(res, 1);
+
+#test test10
+matrix_t A, B;
+s21_create_matrix(2, 3, &A);
+B.rows = 0, B.columns = 3;
+for(int i = 0; i < 2; i++)
+	for(int j = 0; j < 3; ++j)
+		A.matrix[i][j] = (double)rand() / (double)rand() + 0.3;
+int res = s21_eq_matrix(&A, &B);
+ck_assert_int_eq(res, 0);
+
+#test test11
+matrix_t A, B;
+s21_create_matrix(2, 3, &B);
+A.rows = 0, A.columns = 3;
+for(int i = 0; i < 2; i++)
+	for(int j = 0; j < 3; ++j)
+		B.matrix[i][j] = (double)rand() / (double)rand() + 0.3;
+int res = s21_eq_matrix(&A, &B);
+ck_assert_int_eq(res, 0);
+
+#test test12
+matrix_t A, B;
+s21_create_matrix(1, 1, &A);
+s21_create_matrix(1, 1, &B);
+A.matrix[0][0] = 2, B.matrix[0][0] = 2;
+int res = s21_eq_matrix(&A, &B);
+ck_assert_int_eq(res, 1);
+
+
+#test test13
+matrix_t A, B;
+s21_create_matrix(1, 1, &A);
+s21_create_matrix(1, 1, &B);
+A.matrix[0][0] = 2.44, B.matrix[0][0] = 2.44;
+int res = s21_eq_matrix(&A, &B);
+ck_assert_int_eq(res, 1);
+
+#test test14
+matrix_t A, B;
+s21_create_matrix(1, 1, &A);
+s21_create_matrix(1, 1, &B);
+A.matrix[0][0] = 2.76543212, B.matrix[0][0] = 2.76543212;
+int res = s21_eq_matrix(&A, &B);
+ck_assert_int_eq(res, 1);
+
+#test test15
+matrix_t A, B;
+s21_create_matrix(1, 1, &A);
+s21_create_matrix(1, 1, &B);
+A.matrix[0][0] = 2.7654322, B.matrix[0][0] = 2.765432;
+int res = s21_eq_matrix(&A, &B);
+ck_assert_int_eq(res, 0);
+
+#test test16
+matrix_t A, B;
+s21_create_matrix(2, 1, &A);
+s21_create_matrix(2, 1, &B);
+A.matrix[0][0] = 200000, A.matrix[1][0] = 300000, B.matrix[0][0] = 200000, B.matrix[1][0] = 300000;
+int res = s21_eq_matrix(&A, &B);
+ck_assert_int_eq(res, 1);
+
+#test test17
+matrix_t A, B;
+s21_create_matrix(2, 1, &A);
+s21_create_matrix(2, 1, &B);
+A.matrix[0][0] = 200000.88888883, A.matrix[1][0] = 300000, B.matrix[0][0] = 200000.88888884, B.matrix[1][0] = 300000;
+int res = s21_eq_matrix(&A, &B);
+ck_assert_int_eq(res, 1);
+
+#test test18
+matrix_t A, B;
+s21_create_matrix(2, 1, &A);
+s21_create_matrix(2, 1, &B);
+A.matrix[0][0] = 200000.88888883, A.matrix[1][0] = 300000, B.matrix[0][0] = 200000.88888884, B.matrix[1][0] = 300000;
+int res = s21_eq_matrix(&A, &B);
+ck_assert_int_eq(res, 1);
+
+#test test19
+matrix_t A, B;
+s21_create_matrix(2, 1, &A);
+s21_create_matrix(2, 1, &B);
+A.matrix[0][0] = 200000.88888893, A.matrix[1][0] = 300000, B.matrix[0][0] = 200000.88888884, B.matrix[1][0] = 300000;
+int res = s21_eq_matrix(&A, &B);
+ck_assert_int_eq(res, 0);
+
+#test test20
+matrix_t A, B;
+s21_create_matrix(500, 1, &A);
+s21_create_matrix(500, 1, &B);
+for(int i = 0; i < 500; ++i){
+	A.matrix[i][0] = i * 0.0005;
+	B.matrix[i][0] = i * 0.0005;
+}
+int res = s21_eq_matrix(&A, &B);
+ck_assert_int_eq(res, 1);
+
+#test test21
+matrix_t A, B;
+s21_create_matrix(500, 1, &A);
+s21_create_matrix(500, 1, &B);
+for(int i = 0; i < 500; ++i){
+	A.matrix[i][0] = i * 0.0005;
+	B.matrix[i][0] = i * 0.0005;
+}
+B.matrix[499][0] += 0.0000001;
+int res = s21_eq_matrix(&A, &B);
+ck_assert_int_eq(res, 0);
+
+#test test22
+matrix_t A, B;
+s21_create_matrix(1, 800, &A);
+s21_create_matrix(1, 800, &B);
+for(int j = 0; j < 800; ++j){
+	A.matrix[0][j] = j * 0.0005;
+	B.matrix[0][j] = j * 0.0005;
+}
+int res = s21_eq_matrix(&A, &B);
+ck_assert_int_eq(res, 1);
+
+#test test23
+matrix_t A, B;
+s21_create_matrix(1, 800, &A);
+s21_create_matrix(1, 800, &B);
+for(int j = 0; j < 800; ++j){
+	A.matrix[0][j] = j * 0.0005;
+	B.matrix[0][j] = j * 0.0005;
+}
+B.matrix[0][499] += 0.0000001;
+int res = s21_eq_matrix(&A, &B);
+ck_assert_int_eq(res, 0);
+
+#test test24
+matrix_t A, B;
+s21_create_matrix(2000, 2000, &A);
+s21_create_matrix(2000, 2000, &B);
+for(int i = 0; i < 2000; ++i)
+	for(int j = 0; j < 2000; ++j){
+		B.matrix[i][j] = (double)rand() / (double)rand() + 0.3;
+		A.matrix[i][j] = B.matrix[i][j];
+	}
+int res = s21_eq_matrix(&A, &B);
+ck_assert_int_eq(res, 1);
+
+#test test25
+matrix_t A, B;
+A.columns = 0, A.rows = 1, B.columns = 1, B.rows = 1;
+int res = s21_eq_matrix(&A, &B);
+ck_assert_int_eq(0, res);
+
+#test test26
+matrix_t A, B;
+A.columns = 1, A.rows = 0, B.columns = 1, B.rows = 1;
+int res = s21_eq_matrix(&A, &B);
+ck_assert_int_eq(0, res);
+
+#test test27
+matrix_t A, B;
+A.columns = 1, A.rows = 1, B.columns = 0, B.rows = 1;
+int res = s21_eq_matrix(&A, &B);
+ck_assert_int_eq(0, res);
+
+#test test28
+matrix_t A, B;
+A.columns = 1, A.rows = 1, B.columns = 1, B.rows = 0;
+int res = s21_eq_matrix(&A, &B);
+ck_assert_int_eq(0, res);

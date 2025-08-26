@@ -1,0 +1,174 @@
+#include "../s21_matrix.h"
+
+#test test1
+double det;
+int res = s21_determinant(NULL, &det);
+ck_assert_int_eq(res, 1);
+
+#test test2
+matrix_t A;
+double det;
+A.rows = 0, A.columns = 3;
+int res = s21_determinant(&A, &det);
+ck_assert_int_eq(res, 1);
+
+#test test3
+matrix_t A;
+double det;
+A.rows = 3, A.columns = 0;
+int res = s21_determinant(&A, &det);
+ck_assert_int_eq(res, 1);
+
+#test test4
+matrix_t A;
+double det;
+s21_create_matrix(3, 2, &A);
+int res = s21_determinant(&A, &det);
+s21_remove_matrix(&A);
+ck_assert_int_eq(res, 2);
+
+#test test5
+matrix_t A;
+double det;
+s21_create_matrix(1, 1, &A);
+A.matrix[0][0] = 1;
+int res = s21_determinant(&A, &det);
+s21_remove_matrix(&A);
+ck_assert_double_eq(det, 1);
+ck_assert_int_eq(res, 0);
+
+#test test6
+matrix_t A;
+double det;
+s21_create_matrix(2, 2, &A);
+double buf[4] = {1, 2, 3, 4};
+int counter = 0;
+for(int i = 0; i < 2; ++i)
+	for(int j = 0; j < 2; ++j)
+		A.matrix[i][j] = buf[counter++];
+int res = s21_determinant(&A, &det);
+s21_remove_matrix(&A);
+ck_assert_double_eq(det, -2);
+ck_assert_int_eq(res, 0);
+
+#test test7
+matrix_t A;
+double det;
+s21_create_matrix(3, 3, &A);
+double buf[9] = {1, 2, 3, 4, 10, 6, 7, 8, 9};
+int counter = 0;
+for(int i = 0; i < 3; ++i)
+	for(int j = 0; j < 3; ++j)
+		A.matrix[i][j] = buf[counter++];
+int res = s21_determinant(&A, &det);
+s21_remove_matrix(&A);
+ck_assert_double_eq(det, -60);
+ck_assert_int_eq(res, 0);
+
+#test test8
+matrix_t A;
+double det;
+s21_create_matrix(3, 3, &A);
+double buf[9] = {1, 2, 3, 4, 0, 6, 7, 8, 9};
+int counter = 0;
+for(int i = 0; i < 3; ++i)
+	for(int j = 0; j < 3; ++j)
+		A.matrix[i][j] = buf[counter++];
+int res = s21_determinant(&A, &det);
+s21_remove_matrix(&A);
+ck_assert_double_eq(det, 60);
+ck_assert_int_eq(res, 0);
+
+#test test9
+matrix_t A;
+double det;
+s21_create_matrix(3, 3, &A);
+double buf[9] = {1, 0, 3, 4, 0, 6, 7, 8, 9};
+int counter = 0;
+for(int i = 0; i < 3; ++i)
+	for(int j = 0; j < 3; ++j)
+		A.matrix[i][j] = buf[counter++];
+int res = s21_determinant(&A, &det);
+s21_remove_matrix(&A);
+ck_assert_double_eq(det, 48);
+ck_assert_int_eq(res, 0);
+
+#test test10
+matrix_t A;
+double det;
+s21_create_matrix(4, 4, &A);
+double buf[16] = {1, 0, 3, 4, 0, 6, 7, 8, 10, 12, 14, 16, 5, 6, 7, 8};
+int counter = 0;
+for(int i = 0; i < 4; ++i)
+	for(int j = 0; j < 4; ++j)
+		A.matrix[i][j] = buf[counter++];
+int res = s21_determinant(&A, &det);
+s21_remove_matrix(&A);
+ck_assert_double_eq(det, 0);
+ck_assert_int_eq(res, 0);
+
+#test test11
+matrix_t A;
+double det;
+s21_create_matrix(2, 2, &A);
+double m1[4] = {0.1, 0.2, 1, 2.1};
+int counter = 0;
+for(int i = 0; i < 2; ++i)
+	for(int j = 0; j < 2; ++j)
+		A.matrix[i][j] = m1[counter++];
+int res = s21_determinant(&A, &det);
+s21_remove_matrix(&A);
+ck_assert_double_eq_tol(det, 0.01, 1e-2);
+ck_assert_int_eq(res, 0);
+
+#test test12
+matrix_t A;
+double det;
+s21_create_matrix(2, 2, &A);
+int counter = 0;
+double m1[4] = {0.01, 0.2, 1, 2.1};
+for(int i = 0; i < 2; ++i)
+	for(int j = 0; j < 2; ++j)
+		A.matrix[i][j] = m1[counter++];
+int res = s21_determinant(&A, &det);
+s21_remove_matrix(&A);
+ck_assert_double_eq_tol(det, -0.179, 1e-3);
+ck_assert_int_eq(res, 0);
+
+#test test13
+matrix_t A;
+double det;
+s21_create_matrix(7, 7, &A);
+double m1[49] = {1, 0, 1, -1, 2, 3, 4, 1, 2, 3, 4, 5, 6, 7, 7, 6, 5, 4, 3, 2, 1, 0, 1, 2, -1, -2, 2, 0, 1, 0, 3, 4, 0, 6, 7, 1, 2, 3, 4, 0, 6, 7, 0, 1, 0, -1, 0, 1, 2};
+int counter = 0;
+for(int i = 0; i < 7; ++i)
+	for(int j = 0; j < 7; ++j)
+		A.matrix[i][j] = m1[counter++];
+int res = s21_determinant(&A, &det);
+s21_remove_matrix(&A);
+ck_assert_double_eq_tol(det, -1120, 1e-1);
+ck_assert_int_eq(res, 0);
+
+#test test14
+matrix_t A;
+double det;
+s21_create_matrix(1, 1, &A);
+A.matrix[0][0] = 0.001;
+int res = s21_determinant(&A, &det);
+s21_remove_matrix(&A);
+ck_assert_double_eq_tol(det, 0.001, 1e-3);
+ck_assert_int_eq(res, 0);
+
+#test test15
+matrix_t A;
+double det;
+int counter = 0;
+s21_create_matrix(2, 2, &A);
+double m1[4] = {1, 2, 3, 4};
+for(int i = 0; i < 2; ++i)
+	for(int j = 0; j < 2; ++j)
+		A.matrix[i][j] = m1[counter++];
+int res = s21_determinant(&A, &det);
+s21_remove_matrix(&A);
+ck_assert_double_eq_tol(det, -2.0, 1e-1);
+ck_assert_int_eq(res, 0);

@@ -1,0 +1,197 @@
+#include "../s21_matrix.h"
+
+#test test1
+matrix_t A, C;
+s21_create_matrix(2, 3, &A);
+int res = s21_mult_matrix(&A, NULL, &C);
+s21_remove_matrix(&A);
+ck_assert_int_eq(res, 1);
+
+#test test2
+matrix_t A, C;
+s21_create_matrix(2, 3, &A);
+int res = s21_mult_matrix(NULL, &A, &C);
+s21_remove_matrix(&A);
+ck_assert_int_eq(res, 1);
+
+#test test3
+matrix_t C;
+int res = s21_mult_matrix(NULL, NULL, &C);
+ck_assert_int_eq(res, 1);
+
+#test test4
+matrix_t A, B, C;
+s21_create_matrix(2, 3, &A);
+s21_create_matrix(2, 3, &B);
+int res = s21_mult_matrix(&A, &B, &C);
+ck_assert_int_eq(res, 2);
+
+// test5
+
+#test test6
+matrix_t A, B, C;
+s21_create_matrix(3, 3, &A);
+s21_create_matrix(3, 3, &B);
+double buff[9] = {1, 2, 3, 4, 5, 6, 7, 8, 9}, result[9] = {30, 36, 42, 66, 81, 96, 102, 126, 150};
+int counter = 0;
+for(int i = 0; i < 3; ++i)
+	for(int j = 0; j < 3; ++j){
+		A.matrix[i][j] = buff[counter];
+		B.matrix[i][j] = buff[counter++];
+	}
+counter = 0;
+int res = s21_mult_matrix(&B, &A, &C);
+for(int i = 0; i < 3; ++i)
+	for(int j = 0; j < 3; ++j)
+		ck_assert_int_eq(C.matrix[i][j], result[counter++]);
+s21_remove_matrix(&A);
+s21_remove_matrix(&B);
+s21_remove_matrix(&C);
+ck_assert_int_eq(res, 0);
+
+#test test7
+matrix_t A, B, C;
+A.rows = 0, A.columns = 3;
+B.rows = 0, B.columns = 3;
+int res = s21_mult_matrix(&A, &B, &C);
+ck_assert_int_eq(res, 1);
+
+#test test8
+matrix_t A, B, C;
+s21_create_matrix(1, 1, &A);
+s21_create_matrix(1, 1, &B);
+A.matrix[0][0] = 100, B.matrix[0][0] = 0.001;
+int res = s21_mult_matrix(&A, &B, &C);
+ck_assert_int_eq(0, res);
+ck_assert_double_eq(0.1, C.matrix[0][0]);
+s21_remove_matrix(&A);
+s21_remove_matrix(&B);
+s21_remove_matrix(&C);
+
+#test test9
+matrix_t A, B, C;
+s21_create_matrix(2, 1, &A);
+s21_create_matrix(1, 2, &B);
+A.matrix[0][0] = 48.4, A.matrix[1][0] = 15.4, B.matrix[0][0] = 3.9, B.matrix[0][1] = 8.4;
+int res = s21_mult_matrix(&A, &B, &C);
+double result[4] = {188.76, 406.56, 60.06, 129.36};
+ck_assert_int_eq(res, 0);
+int counter = 0;
+for(int i = 0; i < 2; ++i)
+	for(int j = 0; j < 2; ++j)
+		ck_assert_double_eq(C.matrix[i][j], result[counter++]);
+s21_remove_matrix(&A);
+s21_remove_matrix(&B);
+s21_remove_matrix(&C);
+
+#test test10
+matrix_t A, B, C;
+s21_create_matrix(3, 1, &A);
+s21_create_matrix(1, 3, &B);
+int counter = 0;
+double m1[3] = {0.09, 3.34, 8.98}, m2[3] = {5.6, 4.18, 9.07}, result[9] = {0.504, 0.3762, 0.8163, 18.704, 13.9612, 30.2938, 50.288, 37.5364, 81.4486};
+for(int i = 0; i < 3; ++i)
+	A.matrix[i][0] = m1[counter++];
+counter = 0;
+for(int j = 0; j < 3; ++j)
+	B.matrix[0][j] = m2[counter++];
+int res = s21_mult_matrix(&A, &B, &C);
+counter = 0;
+ck_assert_int_eq(0, res);
+for(int i = 0; i < 3; ++i)
+	for(int j = 0; j < 3; ++j)
+		ck_assert_double_eq_tol(C.matrix[i][j], result[counter++], 1e-4);
+s21_remove_matrix(&A);
+s21_remove_matrix(&B);
+s21_remove_matrix(&C);
+
+#test test11
+matrix_t A, B, C;
+s21_create_matrix(3, 3, &A);
+s21_create_matrix(3, 3, &B);
+int counter = 0;
+double m1[9] = {0.1, 18, 9, 3, 8.2, 4, 5.02, 8, 3}, m2[9] = {5.6, 4.18, 9.07, 0, 4, 2, 9.1, 8, 1}, result[9] = {82.46, 144.418, 45.907, 53.2, 77.34, 47.61, 55.412, 76.9836, 64.5314};
+for(int i = 0; i < 3; ++i)
+	for(int j = 0; j < 3; ++j){
+		A.matrix[i][j] = m1[counter];
+		B.matrix[i][j] = m2[counter++];
+	}
+int res = s21_mult_matrix(&A, &B, &C);
+counter = 0;
+ck_assert_int_eq(0, res);
+for(int i = 0; i < 3; ++i)
+	for(int j = 0; j < 3; ++j)
+		ck_assert_double_eq_tol(C.matrix[i][j], result[counter++], 1e-4);
+s21_remove_matrix(&A);
+s21_remove_matrix(&B);
+s21_remove_matrix(&C);
+
+#test test12
+matrix_t A, B, C;
+s21_create_matrix(4, 2, &A);
+s21_create_matrix(2, 5, &B);
+int counter = 0;
+double m1[8] = {0.1, 18, 3, 8.2, 5.02, 8, -1, -4}, m2[10] = {5.6, 4.18, 9.07, 8, 1, 0, 4, 2, -1, 9.1}, result[20] = {0.56, 72.418, 36.907, -17.2, 163.9, 16.8, 45.34, 43.61, 15.8, 77.62, 28.112, 52.9836, 61.5314, 32.16, 77.82, -5.6, -20.18, -17.07, -4, -37.4};
+for(int i = 0; i < 4; ++i)
+	for(int j = 0; j < 2; ++j)
+		A.matrix[i][j] = m1[counter++];
+counter = 0;
+for(int i = 0; i < 2; ++i)
+	for(int j = 0; j < 5; ++j)
+		B.matrix[i][j] = m2[counter++];
+counter = 0;
+int res = s21_mult_matrix(&A, &B, &C);
+ck_assert_int_eq(0, res);
+for(int i = 0; i < 4; ++i)
+	for(int j = 0; j < 5; ++j)
+		ck_assert_double_eq_tol(result[counter++], C.matrix[i][j], 1e-4);
+s21_remove_matrix(&A);
+s21_remove_matrix(&B);
+s21_remove_matrix(&C);
+
+#test test13
+matrix_t A, B, C;
+s21_create_matrix(7, 7, &A);
+s21_create_matrix(7, 7, &B);
+int counter = 0;
+double m1[49] = {1, 0, -1, 2, 3, 1, -2, 0, -3, 2, 3, 1, -2, 1, -1, 3, 2, 4, 1, 0, -2, 3, 2, 1, 0, -1, -2, -1, 0, 1, -1, 0, -1, 1, 0, 2, 2, 1, 1, 0, 0, 3, -3, -2, -1, 0, 1, 2, 3}, 
+m2[49] = {0, 1, -1, 0, -1, 1, 0, 1, 0, -1, 2, 3, 1, -2, -3, -2, -1, 0, 1, 2, 3, 1, 0, -1, 2, 3, 1, -2, 3, 2, 1, 0, -1, -2, -1, 2, 2, 1, 1, 0, 0, 3, 0, -3, 2, 3, 1, -2, 1},
+result[49] = {16, 17, -2, -1, -1, -1, -9, -7, -9, -1, 1, 2, 0, 0, 4, 3, -11, 8, 21, 12, -11, -8, -2, -11, -1, 4, 11, -7, 3, 2, 0, 3, 3, 1, -1, 0, -9, 0, 15, 11, 1, 0, 8, -4, 15, 7, -2, -15, 9};
+for(int i = 0; i < 7; ++i)
+	for(int j = 0; j < 7; ++j){
+		A.matrix[i][j] = m1[counter];
+		B.matrix[i][j] = m2[counter++];
+	}
+int res = s21_mult_matrix(&A, &B, &C);
+ck_assert_int_eq(0, res);
+counter = 0;
+for(int i = 0; i < 7; ++i)
+	for(int j = 0; j < 7; ++j)
+		ck_assert_double_eq(result[counter++], C.matrix[i][j]);
+s21_remove_matrix(&A);
+s21_remove_matrix(&B);
+s21_remove_matrix(&C);
+
+#test test14
+matrix_t A, B, C;
+A.columns = 0, A.rows = 1, B.columns = 1, B.rows = 1;
+int res = s21_mult_matrix(&A, &B, &C);
+ck_assert_int_eq(1, res);
+
+#test test15
+matrix_t A, B, C;
+A.columns = 1, A.rows = 0, B.columns = 1, B.rows = 1;
+int res = s21_mult_matrix(&A, &B, &C);
+ck_assert_int_eq(1, res);
+
+#test test16
+matrix_t A, B, C;
+A.columns = 1, A.rows = 1, B.columns = 0, B.rows = 1;
+int res = s21_mult_matrix(&A, &B, &C);
+ck_assert_int_eq(1, res);
+
+#test test17
+matrix_t A, B, C;
+A.columns = 1, A.rows = 1, B.columns = 1, B.rows = 0;
+int res = s21_mult_matrix(&A, &B, &C);
+ck_assert_int_eq(1, res);
