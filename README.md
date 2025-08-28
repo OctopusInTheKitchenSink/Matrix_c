@@ -30,7 +30,7 @@
 Обратная матрица (inverse_matrix)|int s21_inverse_matrix(matrix_t *A, matrix_t *result);|Матрицу A в степени -1 называют обратной к квадратной матрице А, если произведение этих матриц равняется единичной матрице.<br>Обратной матрицы не существует, если определитель равен 0.
 ## Установка
 ```
-git clone
+git clone https://github.com/OctopusInTheKitchenSink/Matrix_c.git
 cd Matrix_c/src
 make s21_matrix.a
 
