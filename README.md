@@ -18,7 +18,7 @@
 -|-|-
 Создание матриц (create_matrix)|int s21_create_matrix(int rows, int columns, matrix_t *result);| -
 Очистка матриц (remove_matrix)|void s21_remove_matrix(matrix_t *A);| -
-Сравнение матриц (eq_matrix)|int s21_eq_matrix(matrix_t *A, matrix_t *B);|Две матрицы A, B совпадают \|A = B\|, если совпадают их размеры и соответствующие элементы равны, то есть при всех i, j A(i,j) = B(i,j). <br>Сравнение должно происходить вплоть до седьмого знака после запятой включительно.
+Сравнение матриц (eq_matrix)|int s21_eq_matrix(matrix_t *A, matrix_t *B);|Две матрицы A, B совпадают \|A = B\|, если совпадают их размеры и соответствующие элементы равны, то есть при всех i, j A(i,j) = B(i,j). <br>Сравнение происходит вплоть до седьмого знака после запятой включительно.
 Сложение (sum_matrix)|int s21_sum_matrix(matrix_t *A, matrix_t *B, matrix_t *result);|Суммой двух матриц A = m × n и B = m × n одинаковых размеров называется матрица C = m × n = A + B тех же размеров, элементы которой определяются равенствами C(i,j) = A(i,j) + B(i,j).
 вычитание матриц (sub_matrix)|int s21_sub_matrix(matrix_t *A, matrix_t *B, matrix_t *result);|Разностью двух матриц A = m × n и B = m × n одинаковых размеров называется матрица C = m × n = A - B тех же размеров, элементы которой определяются равенствами C(i,j) = A(i,j) - B(i,j).
 Умножение матрицы на число (mult_number)|int s21_mult_number(matrix_t *A, double number, matrix_t *result);|Произведением матрицы A = m × n на число λ называется матрица B = m × n = λ × A, элементы которой определяются равенствами B = λ × A(i,j).
