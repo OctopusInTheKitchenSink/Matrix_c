@@ -34,9 +34,9 @@ git clone https://github.com/OctopusInTheKitchenSink/Matrix_c.git
 cd Matrix_c/src
 make s21_matrix.a
 
-# для подключения билиотеки к своему файлу, подключите заголовочный файл s21_matrix.h,
+# для подключения билбиотеки к своему файлу, подключите заголовочный файл s21_matrix.h,
 # указав корректные пути
-# при компиляции подключайте динамическую библиотеку. Пример:
+# при компиляции подключайте статическую библиотеку. Пример:
 
 gcc -Wall -Werror -Wextra -std=c11 Your_file.c s21_matrix.a
 ./a.out
